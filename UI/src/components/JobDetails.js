@@ -4,11 +4,11 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 const viewClassificationFormatter = (cell, row) => {
     console.log(row.jobID);
     if (cell == 'COMPLETED')
-        return (<a href={`ViewClassification/${row.jobID}`}>View</a>);
+        return (<a href={`Classification/${row.jobID}`}>View</a>);
     else
         return "";
 }
-const JobDetailsTable = (props) => {
+const JobDetails = (props) => {
 
     return (
         <>
@@ -27,4 +27,4 @@ const JobDetailsTable = (props) => {
 
     )
 }
-export default JobDetailsTable;
+export default JobDetails;

@@ -1,7 +1,6 @@
 import react, { useState , useRef} from 'react';
-import Upload from './Upload';
 
-const InitiateJob = (props) => {
+const UploadJob = (props) => {
     
     const [files, selectedFiles] = useState([]);
     const imageInputRef = useRef();
@@ -35,4 +34,4 @@ const InitiateJob = (props) => {
     );
 }
 
-export default InitiateJob;
+export default UploadJob;
