@@ -16,11 +16,11 @@ const DisplayTable = ({ data }) => {
         </TableHeaderColumn>
         <TableHeaderColumn dataField="name" width="25%" >Title</TableHeaderColumn>
         <TableHeaderColumn
-          dataField="extract_text"
+          dataField="extractText"
           width="50%"
           dataFormat={extractTextFormatter}
         >Extracted Text</TableHeaderColumn>
-        <TableHeaderColumn dataField="form_type" width="20%">Form Type</TableHeaderColumn>
+        <TableHeaderColumn dataField="formType" width="20%">Form Type</TableHeaderColumn>
       </BootstrapTable>
     </>
   );

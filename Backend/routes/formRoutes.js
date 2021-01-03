@@ -5,7 +5,7 @@ function routes(db) {
     const formRouter = express.Router();
     formRouter.route('/forms')
         .get((req, res) => {
-            var sql = "select * from Form"
+            var sql = "select jobID,id,name,extract_text extractText,process_time processTime,form_type formType from Form"
             var params = []
             db.all(sql, params, (err, rows) => {
                 if (err) {
@@ -17,33 +17,19 @@ function routes(db) {
         .post((req, res) => {
             var errors = []
             if (!req.body.name) {
-                errors.push("No name specified");
+                errors.push("Filename is not specified");
             }
-            if (!req.body.extract_text) {
-                errors.push("No extract_text specified");
-            }
-            if (!req.body.process_time) {
-                errors.push("No processing time specified");
-            }
-            if (!req.body.start_date) {
-                errors.push("No processing time specified");
-            }
-            if (!req.body.start_date) {
-                errors.push("No processing time specified");
+            if (!req.body.jobid) {
+                errors.push("JobId is not specified");
             }
             if (errors.length) {
-                return res.status(400).json({ "error": errors.join(",") });
+                return res.status(400).json({ "error": errors.join(", ") });
             }
             var data = {
                 jobid : req.body.jobid,
                 name: req.body.name
-                // ,extract_text: req.body.extract_text,
-                // process_time: req.body.process_time,
-                // start_date : req.body.start_date,
-                // form_type : (req.body?.form_type)? req.body.form_type : ''
-                //,EXTRACT_TEXT,PROCESS_TIME,START_DATE,FORM_TYPE
             }
-            var sql = "INSERT INTO FORM(JOBID,NAME) VALUES(?,?)";
+            var sql = "INSERT INTO FORM(JOBID,NAME,EXTRACT_TEXT) VALUES(?,?,'')";
             var params = [data.jobid, data.name]
             db.run(sql, params, function (err, result) {
                 if (err) {
@@ -58,7 +44,7 @@ function routes(db) {
 
     formRouter.route("/forms/:id")
         .get((req, res) => {
-            var sql = "select * from Form where id = ?"
+            var sql = "select jobID,id,name,extract_text extractText,process_time processTime,form_type formType from Form where id = ?"
             var params = [req.params.id]
             db.get(sql, params, (err, row) => {
                 if (err) {

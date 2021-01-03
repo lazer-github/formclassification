@@ -5,7 +5,7 @@ import { Chart } from "react-google-charts";
 
 const DisplayChart = ({ data }) => {
   const groupedResults = data.reduce((acc, item) => {
-    acc[item.form_type] = acc[item.form_type] + 1 || 1;
+    acc[item.formType] = acc[item.formType] + 1 || 1;
     return acc;
   }, {});
   

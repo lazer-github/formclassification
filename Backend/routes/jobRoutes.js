@@ -5,7 +5,7 @@ function routes(db) {
     const jobrouter = express.Router();
     jobrouter.route('/jobs')
         .get((req, res) => {
-            db.all('SELECT * FROM JOB', [], (err, rows) => {
+            db.all('select jobid,path,filescount,status,startdate,enddate from Job', [], (err, rows) => {
                 if (err) return res.status(400).json({ 'message': err.message });
                 return res.status(200).json(rows);
             });
@@ -25,18 +25,17 @@ function routes(db) {
 
             });
         });
-
     jobrouter.route('/jobs/:id')
         .get((req, res) => {
-            db.all('SELECT * FROM JOB WHERE JOBID = ?', [req.params.id], (err, rows) => {
+            db.all('select jobid,path,filescount,status,startdate,enddate from Job where jobid = ?', [req.params.id], (err, rows) => {
                 if (err) return res.status(400).json({ 'message': err.message });
                 return res.status(200).json(rows);
             })
         })
-        .patch((req, res) => {  
+        .patch((req, res) => {
             //socket.io to send update to connected clients.          
-            const sql = (req.body.status == 'COMPLETED') ? 'UPDATE JOB SET status = ?,ENDDATE = CURRENT_TIMESTAMP  where jobid = ?' 
-            : 'UPDATE JOB SET status = ? where jobid = ?'
+            const sql = (req.body.status == 'COMPLETED') ? 'UPDATE JOB SET status = ?,ENDDATE = CURRENT_TIMESTAMP  where jobid = ?'
+                : 'UPDATE JOB SET status = ? where jobid = ?'
             db.run(sql, [req.body.status, req.params.id], function (err, result) {
                 if (err) return res.status(400).json({ message: err.message });
                 return res.status(200).json({ message: 'Record updated!.' });
@@ -48,6 +47,13 @@ function routes(db) {
                 return res.status(200).json({ message: 'Record deleted' });
             })
 
+        });
+    jobrouter.route('/jobs/:id/forms')
+        .get((req, res) => {
+            db.all('select id,name,extract_text extractText,process_time processTime,form_type formType from Form WHERE jobid = ?', [req.params.id], (err, rows) => {
+                if (err) return res.status(400).json({ 'message': err.message });
+                return res.status(200).json(rows);
+            })
         });
     return jobrouter;
 }
