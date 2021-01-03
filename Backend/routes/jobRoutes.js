@@ -1,11 +1,15 @@
+const { query } = require("express");
 var express = require("express")
 var app = express();
 
 function routes(db) {
     const jobrouter = express.Router();
     jobrouter.route('/jobs')
-        .get((req, res) => {
-            db.all('select jobid,path,filescount,status,startdate,enddate from Job', [], (err, rows) => {
+        .get((req, res) => {            
+            let query = 'select jobid,path,filescount,status,startdate,enddate from Job';
+            if(req.query?.status != null)
+             query += ' where status = upper(?)'
+            db.all(query, [req.query?.status], (err, rows) => {
                 if (err) return res.status(400).json({ 'message': err.message });
                 return res.status(200).json(rows);
             });
