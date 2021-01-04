@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 const server = app.listen(HTTP_PORT, () => {  
   console.log(`Server running on port http://localhost:${HTTP_PORT}`)
 });
-
+var socketio = require('./socket').init(server);
 process.on('SIGINT', () => {
   server.close(() => { 
     db.close();

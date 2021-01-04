@@ -4,6 +4,7 @@ var app = express();
 
 function routes(db) {
     const jobrouter = express.Router();
+    let socketio = require('../socket');
     jobrouter.route('/jobs')
         .get((req, res) => {            
             let query = 'select jobid,path,filescount,status,startdate,enddate from Job';
@@ -39,9 +40,14 @@ function routes(db) {
         .patch((req, res) => {
             //socket.io to send update to connected clients.          
             const sql = (req.body.status == 'COMPLETED') ? 'UPDATE JOB SET status = ?,ENDDATE = CURRENT_TIMESTAMP  where jobid = ?'
-                : 'UPDATE JOB SET status = ? where jobid = ?'
-            db.run(sql, [req.body.status, req.params.id], function (err, result) {
+                : 'UPDATE JOB SET status = upper(?) where jobid = ?'
+            const params = [req.body.status, req.params.id];
+            db.run(sql, params, function (err, result) {
                 if (err) return res.status(400).json({ message: err.message });
+                socketio.getIO().emit('jobstatusupdate', {
+                    jobID : req.params.id,
+                    status : req.body.status.toUpperCase()
+                });
                 return res.status(200).json({ message: 'Record updated!.' });
             });
         })

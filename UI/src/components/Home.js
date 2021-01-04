@@ -2,6 +2,7 @@ import react, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import UploadJob from './UploadJob';
 import JobDetails from './JobDetails';
+import openSocket from 'socket.io-client';
 
 const FORMSURL = "/api/jobs";
 const FETCH = async (url, requestOptions) => {
@@ -11,9 +12,19 @@ const FETCH = async (url, requestOptions) => {
 // /api/jobs
 const Home = () => {
     const [jobdetails, SetJobDetails] = useState([]);
+    const socketConnection = openSocket('http://localhost:8000', { transports: ['websocket'] });
     useEffect(() => {
         FETCH(`${FORMSURL}`, { method: "GET" }).then(s => SetJobDetails(s));
     }, []);
+    socketConnection.on('jobstatusupdate', data => {
+        let index = jobdetails?.findIndex(x => x.jobID == data.jobID);       
+        if (index != undefined && index != -1) {
+            let item = jobdetails[index];           
+            item.status = data.status;            
+            jobdetails[index] = item;            
+            SetJobDetails([...jobdetails]);
+        }
+    });
     const uploadData = (jobs) => {
         let uploadData = {
             path: 'D:/text',
@@ -51,6 +62,7 @@ const Home = () => {
                         }).then(res => res.json())
                         .then(formdata => console.log(formdata));
                 });
+
             });
 
     }

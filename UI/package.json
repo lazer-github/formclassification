@@ -13,7 +13,8 @@
     "react-dom": "16.14.0",
     "react-google-charts": "3.0.15",
     "react-multiple-image-input": "^1.0.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "socket.io-client": "^3.0.4"
   },
   "scripts": {
     "start": "react-scripts start",
