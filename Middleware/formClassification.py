@@ -1,15 +1,31 @@
+# get job details   'http://localhost:8000/api/jobs'
+# Get job details based on status.created | inprogress | completed   'http://localhost:8000/api/jobs?status=completed'
+# Get forms attached    'http://localhost:8000/api/jobs/3/forms'
+# Get forms details 'http://localhost:8000/api/forms/1'
+
 from datetime import datetime, timezone
 import requests
 import json
-
-defaultURL = 'https://jsonplaceholder.typicode.com/todos?_limit=1'
-defaultURL = 'http://localhost:8000/api/jobs'   # get job details
-defaultURL = 'http://localhost:8000/api/jobs?status=completed'     # created | inprogress | completed --> get jobdetails based on status.
-defaultURL = 'http://localhost:8000/api/jobs/3/forms'   # get forms attached
-defaultURL = 'http://localhost:8000/api/forms/1'
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
 
-def get(url=defaultURL):
+@dataclass_json
+@dataclass
+class JobUpdate:
+    status: str
+
+
+@dataclass_json
+@dataclass
+class FormUpdate:
+    extract_text: str = ''
+    process_time: str = ''
+    start_date: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    form_type: str = ''
+
+
+def get(url='https://jsonplaceholder.typicode.com/todos?_limit=1'):
     with requests.get(url) as response:
         if response.status_code == 200:
             return json.loads(response.content)
@@ -21,13 +37,12 @@ def patch(url, data):
             return json.loads(response.content)
 
 
-print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-print(get())    # get job details
-data = {"status": "INPROGRESS"}
-print(patch('http://localhost:8000/api/jobs/5', data))  # Update job status
+print(get('http://localhost:8000/api/jobs'))
+print(get('http://localhost:8000/api/jobs/1'))
 
-#   req.body.extract_text, req.body.process_time,req.body.start_date,req.body.form_type, req.params.id
-#   2020-12-31 13:35:49
+# Update job status
+print(patch('http://localhost:8000/api/jobs/5', JobUpdate('INPROGRESS').to_dict()))
+
+#   update form details
 print(patch('http://localhost:8000/api/forms/1',
-            {'extract_text': 'DUMMY', 'process_time': '3.5', 'start_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-             'form_type': 'TEST'}))
+            FormUpdate(extract_text='DUMMY01', process_time='3.5', form_type='UnClassified').to_dict()))
