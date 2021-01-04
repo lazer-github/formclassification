@@ -44,7 +44,7 @@ function routes(db) {
 
     formRouter.route("/forms/:id")
         .get((req, res) => {
-            var sql = "select jobID,id,name,extract_text extractText,process_time processTime,form_type formType from Form where id = ?"
+            var sql = "select jobID,id,name,extract_text extractText,start_date startDate,process_time processTime,form_type formType from Form where id = ?"
             var params = [req.params.id]
             db.get(sql, params, (err, row) => {
                 if (err) {
@@ -54,6 +54,7 @@ function routes(db) {
             });
         })
         .patch((req, res) => {
+            console.log(req.body.start_date)
             var sql = "UPDATE FORM SET EXTRACT_TEXT = ?,PROCESS_TIME = ?, START_DATE = ? ,FORM_TYPE = ?  WHERE ID= ?"
             const data = [req.body.extract_text, req.body.process_time,req.body.start_date, 
                 req.body.form_type, req.params.id];
