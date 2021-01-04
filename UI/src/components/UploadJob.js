@@ -1,4 +1,6 @@
 import react, { useState, useRef } from 'react';
+import { Button } from "react-bootstrap";
+
 const btnStyle = {
     borderColor: 'rgb(118,118,118)',
     padding: '1px 6px',
@@ -37,7 +39,7 @@ const UploadJob = (props) => {
             <input type="file" id="image_uploads" name="image_uploads" style={{ opacity: '0' }}
                 accept="images/*" multiple onChange={onFileChange}
                 ref={imageInputRef} size={10} />
-            <button onClick={onFileUpload}>Upload</button>
+            <Button variant="primary" onClick={onFileUpload}>Upload</Button>
         </>
     );
 }
