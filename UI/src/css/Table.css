@@ -1,18 +1,3 @@
-/* .Table-header {
-    background-color: #ccc;
-    color: blue;
-    text-align: cneter;
-}
-
-
-.Odd-Row {
-    background-color: rgb(249,249,249);
-}
-
-.Even-Row{
-  background-color: rgb(255,255,255);
-} */
-
 .react-bs-table-tool-bar .row{
   align-items: flex-end;
 }

@@ -17,7 +17,7 @@ const Header = (props) => {
     props.history.push(url);
   };
   return (
-    <Navbar fixed="top" collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark" bg="info">
       <Navbar.Brand href="/">Form Classification</Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
       <Navbar.Collapse className="justify-content-end">
