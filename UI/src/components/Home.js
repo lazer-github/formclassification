@@ -68,7 +68,7 @@ const Home = () => {
     }
     return (
         <Container className='flexbox-container'>
-            <Row><Col><UploadJob upload={uploadData} /></Col></Row>
+            <Row><Col><UploadJob upload={uploadData} /><p/></Col></Row>
             <Row><Col><JobDetails data={jobdetails} /></Col></Row>
         </Container>
     )

@@ -6,10 +6,10 @@ function routes(db) {
     const jobrouter = express.Router();
     let socketio = require('../socket');
     jobrouter.route('/jobs')
-        .get((req, res) => {            
+        .get((req, res) => {
             let query = 'select jobid,path,filescount,status,startdate,enddate from Job';
-            if(req.query?.status != null)
-             query += ' where status = upper(?)'
+            if (req.query?.status != null)
+                query += ' where status = upper(?)'
             db.all(query, [req.query?.status], (err, rows) => {
                 if (err) return res.status(400).json({ 'message': err.message });
                 return res.status(200).json(rows);
@@ -41,12 +41,16 @@ function routes(db) {
             //socket.io to send update to connected clients.          
             const sql = (req.body.status == 'COMPLETED') ? 'UPDATE JOB SET status = ?,ENDDATE = CURRENT_TIMESTAMP  where jobid = ?'
                 : 'UPDATE JOB SET status = upper(?) where jobid = ?'
+
+            if (!req.body.status)
+                return res.status(400).json({ message: 'Status missing' });
+
             const params = [req.body.status, req.params.id];
             db.run(sql, params, function (err, result) {
                 if (err) return res.status(400).json({ message: err.message });
                 socketio.getIO().emit('jobstatusupdate', {
-                    jobID : req.params.id,
-                    status : req.body.status.toUpperCase()
+                    jobID: req.params.id,
+                    status: req.body.status.toUpperCase()
                 });
                 return res.status(200).json({ message: 'Record updated!.' });
             });
