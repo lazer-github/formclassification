@@ -18,27 +18,39 @@ const UploadJob = (props) => {
     };
 
     const onFileUpload = () => {
-        if (files.length == 0) return;
-        let filesToUpload = [];
-        for (const file of files) {
-            filesToUpload.push(file.name);
+        if (files.length > 0) {
+            props.upload([...files].map(s => s.name));
+            reset();
         }
-        props.upload(filesToUpload);
-        reset();
     };
 
     const reset = () => {
         selectedFiles([]);
         imageInputRef.current.value = "";
     }
- 
+    const imagePreview = () => {
+        if (files.length > 0) {
+            return (<ul style={{ columns: "4" }}>
+                {
+                    [...files].map((s, idx) =>
+                        <li key={idx}><img src={URL.createObjectURL(s)} height={60} />                           
+                        </li>)}
+            </ul>)
+        }
+        else {
+            return <h6>No Images Selected</h6>
+        }
+    }
     return (
         <>
-            <label htmlFor="image_uploads" style={btnStyle}>
-                Select Images</label>
-            <input type="file" id="image_uploads" name="image_uploads" style={{ opacity: '0' }}
+            <input type="file" id="image_uploads" name="image_uploads" className="visually-hidden"
                 accept="images/*" multiple onChange={onFileChange}
-                ref={imageInputRef} size={10} />
+                ref={imageInputRef} />
+            <label htmlFor="image_uploads" className="btn btn-primary">
+                Select Images to Extract Text</label>
+            <div className="sample-code-frame">
+                {imagePreview()}
+            </div>
             <Button variant="primary" onClick={onFileUpload}>Upload</Button>
         </>
     );

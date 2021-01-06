@@ -12,7 +12,7 @@ const JobDetails = (props) => {
 
     return (
         <>
-            <BootstrapTable maxHeight={300} data={props.data} pagination search striped condensed version='4'>
+            <BootstrapTable maxHeight={300} data={props.data} pagination striped condensed version='4'>
                 <TableHeaderColumn dataField="jobID" width="5%" isKey>
                     ID
         </TableHeaderColumn>
