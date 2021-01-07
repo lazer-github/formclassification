@@ -1,16 +1,7 @@
 import react, { useState, useRef } from 'react';
-import { Button } from "react-bootstrap";
-
-const btnStyle = {
-    borderColor: 'rgb(118,118,118)',
-    padding: '1px 6px',
-    borderWidth: '2px',
-    borderStyle: 'outset',
-    backgroundColor: 'rgb(239,239,239)'
-};
+import { Button, Col, Container, Row } from "react-bootstrap";
 
 const UploadJob = (props) => {
-
     const [files, selectedFiles] = useState([]);
     const imageInputRef = useRef();
     const onFileChange = event => {
@@ -33,7 +24,7 @@ const UploadJob = (props) => {
             return (<ul style={{ columns: "4" }}>
                 {
                     [...files].map((s, idx) =>
-                        <li key={idx}><img src={URL.createObjectURL(s)} height={60} />                           
+                        <li key={idx}><img src={URL.createObjectURL(s)} height={60} />
                         </li>)}
             </ul>)
         }
@@ -42,17 +33,20 @@ const UploadJob = (props) => {
         }
     }
     return (
-        <>
-            <input type="file" id="image_uploads" name="image_uploads" className="visually-hidden"
-                accept="images/*" multiple onChange={onFileChange}
-                ref={imageInputRef} />
-            <label htmlFor="image_uploads" className="btn btn-primary">
-                Select Images to Extract Text</label>
-            <div className="sample-code-frame">
-                {imagePreview()}
-            </div>
-            <Button variant="primary" onClick={onFileUpload}>Upload</Button>
-        </>
+        <Container>
+            <Row><Col>
+                <input type="file" id="image_uploads" name="image_uploads" className="visually-hidden"
+                    accept="images/*" multiple onChange={onFileChange}
+                    ref={imageInputRef} />
+                <label htmlFor="image_uploads" className="btn btn-secondary">
+                    Select Images to Extract Text</label>
+            </Col><Col> <Button variant="secondary" onClick={onFileUpload}>Upload</Button></Col></Row>
+            <Row><Col>
+                <div className="sample-code-frame">
+                    {imagePreview()}
+                </div></Col>
+            </Row>
+        </Container>
     );
 }
 
