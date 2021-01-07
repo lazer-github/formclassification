@@ -10,7 +10,7 @@ const extractTextFormatter = (cell) => {
 const ClassificationDetails = ({ data }) => {
   return (
     <>
-      <BootstrapTable maxHeight={300} data={data} exportCSV pagination search striped condensed version='4'>
+      <BootstrapTable maxHeight={350} data={data} exportCSV pagination search striped condensed version='4'>
         <TableHeaderColumn dataField="id" width="5%" isKey>
           ID
         </TableHeaderColumn>
