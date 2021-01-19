@@ -64,7 +64,7 @@ function routes(db) {
         });
     jobrouter.route('/jobs/:id/forms')
         .get((req, res) => {
-            db.all('select id,name,extract_text extractText,process_time processTime,form_type formType from Form WHERE jobid = ?', [req.params.id], (err, rows) => {
+            db.all('select id,name,extract_text extractText,process_time processTime,form_type formType,complexity from Form WHERE jobid = ?', [req.params.id], (err, rows) => {
                 if (err) return res.status(400).json({ 'message': err.message });
                 return res.status(200).json(rows);
             })

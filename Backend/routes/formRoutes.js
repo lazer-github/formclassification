@@ -5,7 +5,7 @@ function routes(db) {
     const formRouter = express.Router();
     formRouter.route('/forms')
         .get((req, res) => {
-            var sql = "select jobID,id,name,extract_text extractText,process_time processTime,form_type formType from Form"
+            var sql = "select jobID,id,name,extract_text extractText,process_time processTime,form_type formType,complexity from Form"
             var params = []
             db.all(sql, params, (err, rows) => {
                 if (err) {
@@ -44,7 +44,7 @@ function routes(db) {
 
     formRouter.route("/forms/:id")
         .get((req, res) => {
-            var sql = "select jobID,id,name,extract_text extractText,start_date startDate,process_time processTime,form_type formType from Form where id = ?"
+            var sql = "select jobID,id,name,extract_text extractText,start_date startDate,process_time processTime,form_type formType,complexity from Form where id = ?"
             var params = [req.params.id]
             db.get(sql, params, (err, row) => {
                 if (err) {
@@ -55,9 +55,9 @@ function routes(db) {
         })
         .patch((req, res) => {
             console.log(req.body.start_date)
-            var sql = "UPDATE FORM SET EXTRACT_TEXT = ?,PROCESS_TIME = ?, START_DATE = ? ,FORM_TYPE = ?  WHERE ID= ?"
+            var sql = "UPDATE FORM SET EXTRACT_TEXT = ?,PROCESS_TIME = ?, START_DATE = ? ,FORM_TYPE = ?, COMPLEXITY = ?  WHERE ID= ?"
             const data = [req.body.extract_text, req.body.process_time,req.body.start_date, 
-                req.body.form_type, req.params.id];
+                req.body.form_type,req.params.complexity ,req.params.id];
             db.run(sql, data,function(err,result){
                 if(err)
                 return res.status(400).json({message : err.message});
