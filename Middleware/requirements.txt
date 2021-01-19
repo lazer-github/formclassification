@@ -1,0 +1,7 @@
+opencv-python==4.4.0.46
+pytesseract==0.3.7
+nltk==3.5
+truecase==0.0.12
+requests==2.25.1
+pandas==1.1.5
+numpy==1.19.4
