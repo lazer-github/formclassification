@@ -1,17 +1,17 @@
 import csv
 import datetime
 import time
+import warnings
 
 import cv2
 import pytesseract
 import os
 import re
 import nltk
-# import spacy
 import truecase
 
-
-from textClassify import classify
+# from databasedb3 import insert_data, clear_all_data
+from TextClassify import classify
 from formClassificationAPI import get, patch
 from userDefinedTypes import JobUpdate, FormUpdate
 
@@ -163,7 +163,7 @@ def parse_extract_details(extract_details):
             clean_list.append(item)
 
     # using search() to get only those strings with alphabets.
-    clean_list = list(filter(lambda ele: re.search(r'[^a-zA-Z-.:\s]', ele) is None, clean_list))
+    clean_list = list(filter(lambda ele: re.search(r'[^a-zA-Z\s]', ele) is None, clean_list))
 
     return clean_list
 
@@ -186,6 +186,29 @@ def natural_language_cleanup(parse_list):
     return sentence
 
 
+def cal_complexity(extract_details):
+    """
+    This function take one argument.
+    it will calculate the complexity.
+    :param extract_details: list
+    :return: complexity
+    """
+    prs_text = parse_extract_details(extract['text'])
+    cln_text = natural_language_cleanup(prs_text)
+
+    cln_count = len(re.findall(r'\w+', cln_text))
+    clean_percent = cln_count/len(prs_text) * 100
+
+    print("parsed_text count: {0}".format(len(prs_text)))
+    print("clean_text count: {0}".format(cln_count))
+
+    cmp_percent = 100 - round(clean_percent, 2)
+
+    tolerance = 10
+
+    return round(cmp_percent, 2)
+
+
 def write_text(formatted_text):
     """
     This function take one argument.
@@ -197,6 +220,19 @@ def write_text(formatted_text):
 
     with open(r'output\result.csv', 'w', newline="") as file:
         csv.writer(file, delimiter=" ").writerows(formatted_text)
+
+
+def write_db3(f_name, cln_text, pro_time, st_date, frm_type):
+    """
+    This function will write the data to db3 file
+    :param frm_type:
+    :param f_name:
+    :param cln_text:
+    :param pro_time:
+    :param st_date:
+    :return: None
+    """
+    insert_data(f_name, cln_text, pro_time, st_date, frm_type)
 
 
 def draw_box(draw_image, extracted_details, image_name):
@@ -236,32 +272,51 @@ def draw_box(draw_image, extracted_details, image_name):
 ## Start point to initiate the form classification process:
 """
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
+
+    # file_name = r'D:\Users\nlama\PycharmProjects\FirstProject\104052679_00028.j2k.jpg'
+    # orig_image = cv2.imread(file_name, 2)
+    # sl_image = slice_image(orig_image)  # rs_image = resize_image(orig_image)
+    # extract = extract_text(sl_image)  # th_image = threshold_image(sl_image)
+    # parsed_text = parse_extract_details(extract['text'])
+    # clean_text = natural_language_cleanup(parsed_text)
+    # com_val = cal_complexity(parsed_text)
+
     while 1 == 1:
         count = 1
-        for job in get('http://localhost:8000/api/jobs?status=created', 'Job'):
+        get_jobs = get('http://localhost:8000/api/jobs?status=created', 'Job')
+        time.sleep(5)
+        # print("Jobs count", len(get_jobs))
+        for job in get_jobs:
             patch('http://localhost:8000/api/jobs/{0}'.format(job.jobID), JobUpdate('INPROGRESS').to_dict())
+            # print('job updated inprogress..: {0}'.format(job.jobID))
             form_geturl = 'http://localhost:8000/api/jobs/{0}/forms'.format(job.jobID)
             for form in get(form_geturl, 'Form'):
                 file_name = form.name
                 start_time = time.time()
-                orig_image = cv2.imread(file_name, 2)	# reading images from local directory
-                sl_image = slice_image(orig_image)	# rs_image = resize_image(orig_image)
-                extract = extract_text(sl_image)	# th_image = threshold_image(sl_image)
+                orig_image = cv2.imread(file_name, 2)  # reading images from local directory
+                sl_image = slice_image(orig_image)  # rs_image = resize_image(orig_image)
+                extract = extract_text(sl_image)  # th_image = threshold_image(sl_image)
                 draw_box(sl_image, extract, file_name)
                 parsed_text = parse_extract_details(extract['text'])
                 clean_text = natural_language_cleanup(parsed_text)
+                complexity_percent = cal_complexity(parsed_text)
                 end_time = time.time()
                 process_time = round(end_time - start_time, 2)
                 start_date = datetime.datetime.now()
                 form_type = classify([clean_text])
                 patch('http://localhost:8000/api/forms/{0}'.format(form.id), FormUpdate(extract_text=clean_text,
                                                                                         process_time=process_time,
-                                                                                        form_type=form_type).to_dict())
+                                                                                        form_type=form_type,
+                                                                                        complexity=complexity_percent).to_dict())
+
                 count = count + 1
-                print('END FOR 2')
+                # print('END FOR 2')
             patch('http://localhost:8000/api/jobs/{0}'.format(job.jobID), JobUpdate('COMPLETED').to_dict())
-            print('END FOR 1')
-        print('END WHILE')
+            # print('job updated completed..: {0}'.format(job.jobID))
+            # print('END FOR 1')
+        # print('END WHILE')
+        print('service started ...')
 
 # display image
 # cv2.imshow('captured text', box_image)

@@ -12,7 +12,8 @@ def get(url: str, responsetype: str):
                 if responsetype == 'Job':
                     result.append(Job(item["jobID"], item["path"], item["filesCount"], item['status']))
                 elif responsetype == 'Form':
-                    result.append(Form(item['id'], item['name'], item['extractText'], item['formType']))
+                    result.append(Form(item['id'], item['name'], item['extractText'], item['formType'],
+                                       item['complexity']))
             return result
 
 

@@ -5,18 +5,23 @@
       "Keywords": "death,deceased"
     },
     {
+      "tag": "Marriage Certificate",
+      "headerKey": "return marriage, marriage, groom marriage, groom certificate, marriage register, marriage banns, marriage record, marriage bond, marriage license, marriage application, consent affidavit, marriage contract settlement, marriage certificate, marriage return, groom, bride, widow",
+      "Keywords": "marriage"
+    },
+    {
       "tag": "Birth Certificate",
       "headerKey": "birth proof, birth certificate, certificate birth, place birth, birthplace, birth place, birth location, certification birth, certificate live birth, live birth, livebirth, birth registration, notification birth, report birth, birth report, birth abroad",
       "Keywords": "birth"
-    },
-    {
-      "tag": "Marriage Certificate",
-      "headerKey": "marriage banns, marriage record, marriage bond, marriage license, marriage application, consent affidavit, marriage contract settlement, marriage certificate, marriage return, return marriage, marriage register, newspaper announcement",
-      "Keywords": "marriage,consent,groom,bride"
     },
      {
       "tag": "Military Certificate",
       "headerKey": "service record, service number,service no, served, service statement, service rank, period service, military service",
       "Keywords": "military, service, casualties, casualty"
+    },
+    {
+      "tag": "Census",
+      "headerKey": "Twelfth census, census, nativity, citizenship, population",
+      "Keywords": "census"
     }
   ]

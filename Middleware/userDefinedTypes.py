@@ -19,8 +19,9 @@ class Form:
     name: str
     extractText: str = ''
     formType: str = ''
-    startDate: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    startDate: str = ''
     processTime: float = 0.0
+    complexity: float = 0.0
 
 
 @dataclass_json
@@ -34,5 +35,6 @@ class JobUpdate:
 class FormUpdate:
     extract_text: str = ''
     process_time: str = ''
-    start_date: str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    start_date: str = ''
     form_type: str = ''
+    complexity: str = ''
