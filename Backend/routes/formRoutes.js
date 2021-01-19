@@ -57,7 +57,7 @@ function routes(db) {
             console.log(req.body.start_date)
             var sql = "UPDATE FORM SET EXTRACT_TEXT = ?,PROCESS_TIME = ?, START_DATE = ? ,FORM_TYPE = ?, COMPLEXITY = ?  WHERE ID= ?"
             const data = [req.body.extract_text, req.body.process_time,req.body.start_date, 
-                req.body.form_type,req.params.complexity ,req.params.id];
+                req.body.form_type,req.body.complexity ,req.params.id];
             db.run(sql, data,function(err,result){
                 if(err)
                 return res.status(400).json({message : err.message});
